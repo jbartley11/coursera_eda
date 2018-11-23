@@ -101,3 +101,60 @@ barplot(table(data$region), col="wheat", main="Number of counties in each region
 # spinning plots
 # actual 3D plots
 
+# multiple boxplots
+boxplot(pm25 ~ region, data=data, col="red")
+
+# multiple histograms
+par(mfrow= c(2,1), mar=c(4,4,2,1))
+hist(subset(data, region=="east")$pm25, col="green")
+hist(subset(data, region=="west")$pm25, col="green")
+
+# scatter plot
+with(data, plot(latitude, pm25, col=region))
+abline(h=12, lwd=2, lty=2)
+
+# multiple scatterplots
+par(mfrow=c(1,2), mar=c(5,4,2,1))
+with(subset(data, region=="east"), plot(latitude, pm25, main="East"))
+with(subset(data, region=="west"), plot(latitude, pm25, main="West"))
+
+# resources
+# r graph gallery
+# r bloggers
+
+# plotting systems in R --------------
+# 3 core plotting systems
+
+# base plotting system
+# original, artist's palette model, blank and build up from there
+# add one by one
+# takes more code
+# text, lines, points, axes
+# convenient
+# can't go back/remove items
+
+# base plot
+library(datasets)
+data(cars)
+with(cars, plot(speed, dist))
+
+# 2nd major plotting system - Lattice
+# every plot is made with single function call
+# have to specify a lot of information
+# good for coplots, panel plots
+# x and y over z
+# can put a lot of plots over page, quickly
+# awkward using single function call
+# hard to annotate
+# can't add anything after it's made
+
+library(lattice)
+state <- data.frame(state.x77, region=state.region)
+xyplot(Life.Exp ~ Income | region, data=state, layout=c(4,1))
+
+
+# 3rd system - ggplot2
+# grammar of graphics system
+# mixes ideas from base and lattice
+# deals with spacings, text, titles
+# has default mode, that you can change
