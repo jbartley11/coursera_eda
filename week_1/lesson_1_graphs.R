@@ -122,7 +122,7 @@ with(subset(data, region=="west"), plot(latitude, pm25, main="West"))
 # r graph gallery
 # r bloggers
 
-# plotting systems in R --------------
+# Plotting Systems in R --------------
 # 3 core plotting systems
 
 # base plotting system
@@ -158,3 +158,129 @@ xyplot(Life.Exp ~ Income | region, data=state, layout=c(4,1))
 # mixes ideas from base and lattice
 # deals with spacings, text, titles
 # has default mode, that you can change
+
+library(ggplot2)
+data(mpg)
+qplot(displ, hwy, data=mpg)
+
+# The Base Plotting System --------------------
+
+# graphics package - contains functions for the base system
+# includes plot, hist, boxplot, and others
+# grDevices - code for X11, PDF, PostScript, PNG
+# lattice uses lattice and grid package
+
+# process of making a plot
+# where will it be made, screen, file
+# how will it be used?
+# large amount of data?
+# does it need to be scalable
+
+# what system do you want to use?
+# base - piecemeal
+# lattice - single function call
+# ggplot2 - combines both
+
+# base graphics
+# 2 steps: create new plot, annotate it
+# par
+
+# reset par
+par(mfrow = c(1,1))
+
+library(datasets)
+hist(airquality$Ozone)
+
+# scatterplot
+with(airquality, plot(Wind, Ozone))
+
+# boxplot
+# use transform to convert month column to factor
+airquality <- transform(airquality, Month = factor(Month))
+boxplot(Ozone ~ Month, airquality, xlab="Month", ylab="Ozone")
+
+# base graphics parameters
+# pch - plotting symbol
+# lty - line type, solid, dashed
+# lwd - line width
+# col - color
+# xlab, ylab - axes labels
+
+# par is used to specify global graphics parameters
+# las - orientation of the axis labels
+# bg - background color
+# mar - margin size
+# oma - out margin size
+# mfrow - number of plots per row, column - filled row-wise
+# mfcol - number of plots per row, column - filled column-wise
+
+# see what default values are
+par("lty")
+par("mar")
+par("bg")
+
+# Base Plotting Functions ------------------------------
+# plot - make scatterplot,  or other type
+# lines - add line to plot
+# points add points to plot
+# text - add labels based on x, y coordinates
+# mtext - text in margins
+# axis - add axis ticks/labels
+
+library(datasets)
+with(airquality, plot(Wind, Ozone))
+title(main="Ozone and Wind in New York City")
+
+# add title within plot function
+with(airquality, plot(Wind, Ozone, main="Ozone and Wind in New York City"))
+
+# subset datset and add points to existing plot
+with(subset(airquality, Month==5), points(Wind, Ozone, col="blue"))
+with(subset(airquality, Month!=5), points(Wind, Ozone, col="red"))
+
+# add legend
+legend("topright", pch=1, col=c("blue","red"), legend=c("May", "Other Months"))
+
+# base plot with regression line
+with(airquality, plot(Wind, Ozone,
+                      main="Ozone and Wind in New York City",
+                      pch=20))
+?lm
+model <- lm(Ozone ~ Wind, airquality)
+abline(model, lwd=2)
+
+# multiple base plots
+par(mfrow=c(1,1))
+par(mfrow=c(1,2))
+with(airquality, plot(Wind, Ozone, main="Ozone and Wind"))
+with(airquality, plot(Solar.R, Ozone, main="Ozone and Solar Radiation"))
+
+# Base Plotting Demo ---------------------------------------------------
+par(mfrow=c(1,1))
+x <- rnorm(100)
+hist(x)
+
+y <- rnorm(100)
+plot(x, y)
+par(mar=c(4,4,2,2))
+
+#pch=20 - solid 
+example(points)
+
+# Graphics Devices-------------------------------------------------------
+
+# something where you can make a plot appear
+# window on screen, pdf, png or jpeg, svg
+
+# full list of devices available on your computer ?Devices
+
+# Graphics File Devices-------------------------------------------------
+# pdf, svg, win.metafile, postscript
+# bitmap: png, jpeg, tiff, bmp
+
+# copying plots, create on screen, make file from it
+with(faithful, plot(eruptions, waiting))
+title(main="Old Faithful Geyser data")
+dev.copy(png, file="geyserplot.png")
+dev.off()
+getwd()
