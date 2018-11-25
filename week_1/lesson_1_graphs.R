@@ -62,6 +62,12 @@ summary(data$pm25)
 # black line is median
 # whiskers are min and max
 # box represents values in 2nd and 3rd quartiles
+# The "whiskers" of the box (the vertical lines extending above and below the box) relate to the range
+# | parameter of boxplot, which we let default to the value 1.5 used by R. The height of the box is the
+# | interquartile range, the difference between the 75th and 25th quantiles. In this case that difference is
+# | 2.8. The whiskers are drawn to be a length of range*2.8 or 1.5*2.8. This shows us roughly how many, if any,
+# | data points are outliers, that is, beyond this range of values.
+
 boxplot(data$pm25, col="blue")
 
 # histogram
