@@ -55,3 +55,85 @@ plot(hClustering)
 
 # need to cut tree to determine how many clusters there are
 # then you can get cluster assignment
+
+# Hierarchical Clustering Part 3----------------
+
+# prettier 
+myplclust <- function(hclust, lab=hclust$labels, lab.col = rep(1, length(hclust$labels)), hang=0.1, ...) {
+  ## modification of plclust for plotting hclust objects in color
+  y <- rep(hclust$height, 2)
+  x <- as.numeric(hclust$merge)
+  y <- y[which(x<0)]
+  x <- x[which(x<0)]
+  x <- abs(x)
+  y <- y[order(x)]
+  x <- x[order(x)]
+  plot(hclust, labels=FALSE, hang=hang, ...)
+  text(x = x, y=y[hclust$order] - (max(hclust$height) * hang), labels=lab[hclust$order],
+       col=lab.col[hclust$order], srt=90, adj=c(1,0.5), xpd=NA, ...)
+}
+
+myplclust(hClustering, lab=rep(1:3, each=4), lab.col=rep(1:3, each=4))
+
+# even prettier dendrograms: gallery.r-enthusiasts.com/RGraphGallery
+
+# merging points - complete
+# averaging - middle between two points, centroid of clusters distance between
+# complete - distance between two furtherest points another option
+
+#heatmap
+df <- data.frame(x=x, y=y)
+set.seed(143)
+dataMatrix <- as.matrix(df)[sample(1:12),]
+heatmap(dataMatrix)
+
+# K-means Clustering Part 1 -----------------------
+# how do we determine similiarity and difference
+# close - need to give it a distance metric
+# different definitions of distance - euclidean(straight line), or correlation, or manhattan distance
+
+# partioning approach, fix a number of clusters
+# get centroids, assign things to closest, recalculate centroids
+# requires: dinstance, number of clusters, initial guess of cluster centroids
+# produces: estimate of cluster centroids, assignment of each point to cluster
+
+# example
+set.seed(1234)
+par(mar=c(0,0,0,0))
+x <- rnorm(12, mean=rep(1:3, each=4), sd=0.2)
+y <- rnorm(12, mean=rep(c(1,2,1), each=4), sd=0.2)
+plot(x, y, col="blue", pch=19, cex=2)
+text(x + 0.05, y + 0.05, labels = as.character(1:12))
+
+# starting centroids
+# assign point to closest centroid
+# recalculate centroids
+# iterate over update centroid and assign points to cluster
+
+# K-means Clustering Part 2 -----------------------
+
+kmeansObj <- kmeans(df, centers=3)
+# view elements in kmeans object
+names(kmeansObj)
+# return vector of cluster
+kmeansObj$cluster
+
+# plot results
+par(mar=rep(0.2,4))
+plot(x,y, col=kmeansObj$cluster, pch=19, cex=2)
+points(kmeansObj$centers, col=1:3, pch=3, cex=3, lwd=3)
+
+# view clustering info as heatmap
+set.seed(1234)
+dataMatrix <- as.matrix(df)[sample(1:12),]
+kmeansObj2 <- kmeans(dataMatrix, centers=3)
+par(mfrow=c(1,2), mar=c(2,4,0.1,0.1))
+image(t(dataMatrix)[,nrow(dataMatrix):1], yaxt="n")
+image(t(dataMatrix)[,order(kmeansObj2$cluster)], yaxt="n")
+
+# k-means requires that you know number of clusters
+# have to use eye/intuition
+# cross validation information theory can help determine number of clusters
+# not deterministic: not stable results, different # of clusters, different iterations
+
+# Dimension Reduction Part 1 -------------------
